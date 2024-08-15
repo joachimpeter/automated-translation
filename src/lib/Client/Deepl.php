@@ -17,6 +17,8 @@ class Deepl implements ClientInterface
 {
     private string $authKey;
 
+    private string $baseUri = 'https://api.deepl.com/';
+
     public function getServiceAlias(): string
     {
         return 'deepl';
@@ -36,6 +38,11 @@ class Deepl implements ClientInterface
             throw new ClientNotConfiguredException('authKey is required');
         }
         $this->authKey = $configuration['authKey'];
+
+        if (isset($configuration['baseUri'])) {
+            $this->baseUri = $configuration['baseUri'];
+        }
+
     }
 
     public function translate(string $payload, ?string $from, string $to): string
@@ -55,7 +62,7 @@ class Deepl implements ClientInterface
 
         $http = new Client(
             [
-                'base_uri' => 'https://api.deepl.com',
+                'base_uri' => $this->baseUri,
                 'timeout' => 5.0,
             ]
         );
